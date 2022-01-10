@@ -1,2 +1,2 @@
 //Chamada/instância da classe
-let calculadora = new CalcController()
+window.calculator = new CalcController() //torna global
