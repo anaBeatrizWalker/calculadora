@@ -28,8 +28,42 @@ class CalcController {
     clearEntry(){
         this._operation.pop() //exclui o último clicado
     }
+    //Retorna o último digitado, sendo operação ou número
+    getLastOperation(){
+        return this._operation[this._operation.length-1]
+    }
+    //Troca o último valor pelo anterior
+    setLastOperation(value){
+        this._operation[this._operation.length-1] = value
+    }
+
+    isOperator(value){
+        //retorna se value é um dos operadores
+        return ['+', '-', '*', '%', '/'].indexOf(value) > -1      
+    } 
+
     addOperation(value){
-        this._operation.push(value)
+        if(isNaN(this.getLastOperation())){
+            //String
+            //se é operações e ponto
+            if(this.isOperator(value)){ 
+               // se for um operador, troca pelo último
+               this.setLasOperation(value)
+
+            }else if(isNaN(value)){
+                //Outra coisa
+                console.log(value)
+            }else{
+                this._operation.push(value)
+            }
+
+        }else{
+            //Number
+            //Converte para string para concatenar os números
+            let newValue = this.getLastOperation().toString() +  value.toString()
+
+            this.setLastOperation(parseInt(newValue))//troca pelo último
+        }
         console.log(this._operation)
     }
     setError(){
@@ -48,23 +82,23 @@ class CalcController {
                 break;
             
             case 'soma':
-                
+                this.addOperation('+')
                 break;
 
             case 'subtracao':
-                
+                this.addOperation('-')
                 break;
 
             case 'multiplicacao':
-                
+                this.addOperation('*')
                 break;
             
             case 'divisao':
-                
+                this.addOperation('/')
                 break;
 
             case 'porcento':
-                
+                this.addOperation('%')
                 break;
 
             case 'igual':
