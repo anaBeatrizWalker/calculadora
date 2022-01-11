@@ -21,14 +21,28 @@ class CalcController {
         }, 1000)
     }
 
+    //Trata múltiplos eventos ao mesmo tempo
+    addEventListenerAll(element, events, fn){
+
+        //Split converte a string dos eventos em um array
+        events.split(' ').forEach(event => {
+            element.addEventListener(event, fn, false) //false evita disparar 2x o evento
+        })
+    }
+
     initButtonsEvents(){
         //Pegas todos os g filhos de button e de parts
         let buttons = document.querySelectorAll("#buttons > g, #parts > g")
 
         //Percorre a lista e para cada botão adiciona o evento click
         buttons.forEach((btn, index) => {
-            btn.addEventListener('click', e => {
+            this.addEventListenerAll(btn, 'click drag', e => {
                 console.log(btn.className.baseVal.replace("btn-",""))
+            })
+            this.addEventListenerAll(btn, 'mouseover mouseup mousedown', e => {
+
+                //Deixa o cursor como clicável
+                btn.style.cursor = "pointer"
             })
         })
     }
