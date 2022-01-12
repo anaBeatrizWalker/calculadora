@@ -28,7 +28,10 @@ class CalcController {
     }
 
     clearAll(){
+        //Zera tudo e atualiza o display
         this._operation = []
+        this._lastNumber = ''
+        this._lastOperator = ''
         this.setLastNumberToDisplay()
     }
     clearEntry(){
