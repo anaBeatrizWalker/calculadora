@@ -20,13 +20,17 @@ class CalcController {
         setInterval(()=>{
             this.setDisplayDateTime()
         }, 1000)
+        
+        this.setLastNumberToDisplay()
     }
 
     clearAll(){
         this._operation = []
+        this.setLastNumberToDisplay()
     }
     clearEntry(){
         this._operation.pop() //exclui o último clicado
+        this.setLastNumberToDisplay()
     }
     //Retorna o último digitado, sendo operação ou número
     getLastOperation(){
@@ -83,6 +87,8 @@ class CalcController {
                 break
             }
         }
+        if(!lastNumber) lastNumber = 0
+
         this.displayCalc = lastNumber
     }
 
