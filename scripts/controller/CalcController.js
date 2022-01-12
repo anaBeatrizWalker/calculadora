@@ -42,7 +42,29 @@ class CalcController {
         return ['+', '-', '*', '%', '/'].indexOf(value) > -1      
     } 
 
+    //Faz os push
+    pushOperation(value){
+        this._operation.push(value)
+
+        //Se digitou mais de 3 itens
+        if(this._operation.length > 3){
+            //Calcula a primeira operação (os primeiros 3 itens)
+            this.calc()
+        }
+    } 
+
+    calc(){
+        //Tira o último
+        let last = this._operation.pop()
+
+        //Tranforma em string e faz a operação
+        let result = eval(this._operation.join(""))
+
+        this._operation = [result, last] //espera o próximo elemento da calculadora
+    }
+
     addOperation(value){
+        
         if(isNaN(this.getLastOperation())){
             //String
             //se é operações e ponto
@@ -54,18 +76,23 @@ class CalcController {
                 //Outra coisa
                 console.log(value)
             }else{
-                this._operation.push(value)
+                this.pushOperation(value)
             }
 
         }else{
-            //Number
-            //Converte para string para concatenar os números
-            let newValue = this.getLastOperation().toString() +  value.toString()
+            if(this.isOperator(value)){
+                //Operador
+                this.pushOperation(value)
+            }else{
+                //Number
+                //Converte para string para concatenar os números
+                let newValue = this.getLastOperation().toString() +  value.toString()
 
-            this.setLastOperation(parseInt(newValue))//troca pelo último
+                this.setLastOperation(parseInt(newValue))//troca pelo último
+            }
         }
-        console.log(this._operation)
     }
+
     setError(){
         this.displayCalc = 'Error'
     }
