@@ -58,8 +58,13 @@ class CalcController {
     } 
 
     calc(){
-        //Tira o último
-        let last = this._operation.pop()
+        let last = ''
+
+        if(this._operation.length > 3){
+            //Tira o último
+            last = this._operation.pop()
+        }
+        
         //Tranforma em string e faz a operação
         let result = eval(this._operation.join(""))
 
@@ -70,8 +75,10 @@ class CalcController {
             this._operation = [result]
 
         }else{
-            //salva e espera o próximo elemento da calculadora
-            this._operation = [result, last] 
+            //salva o resultado
+            this._operation = [result]
+            //adiciona last se existir
+            if(last) this._operation.push(last)
         }
         this.setLastNumberToDisplay()
     }
@@ -162,7 +169,7 @@ class CalcController {
                 break;
 
             case 'igual':
-                
+                this.calc()
                 break;
 
             case 'ponto':
