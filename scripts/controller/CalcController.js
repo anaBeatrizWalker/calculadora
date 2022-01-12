@@ -162,7 +162,7 @@ class CalcController {
                 //Converte para string para concatenar os números
                 let newValue = this.getLastOperation().toString() +  value.toString()
 
-                this.setLastOperation(parseFloat(newValue))//troca pelo último
+                this.setLastOperation(newValue)//troca pelo último
 
                 this.setLastNumberToDisplay()//atualiza display
             }
@@ -175,6 +175,9 @@ class CalcController {
 
     addDot(){
         let lastOperation = this.getLastOperation()
+
+        //Se é uma string de números E já tem um ponto, então para a execução
+        if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) return
 
         //Se é um operador ou não existe
         if(this.isOperator(lastOperation) || !lastOperation){
