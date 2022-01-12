@@ -15,6 +15,25 @@ class CalcController {
         this.initKeyboard()
     }
 
+    //Colar da área de transferência
+    pasteFromClipboard(){
+        document.addEventListener('paste', e => {
+
+            let text = e.clipboardData.getData('Text')
+            this.displayCalc = parseFloat(text)
+        })
+    }
+
+    //Copiar para a área de transferência
+    copyToClipboard(){
+        let input = document.createElement('input')
+        input.value = this.displayCalc
+        document.body.appendChild(input)
+        input.select() //seleciona o conteúdo do input
+        document.execCommand("Copy") //copia o que esta selecionado
+        input.remove() //remove o input da tela
+    }
+
     initialize(){
 
         //Mostra a hora e data
@@ -26,6 +45,7 @@ class CalcController {
         }, 1000)
         
         this.setLastNumberToDisplay()
+        this.pasteFromClipboard()
     }
 
     //Usando o teclado 
@@ -73,9 +93,9 @@ class CalcController {
                     this.addOperation(parseInt(e.key))
                     break;
 
-                default:
-                    this.setError()
-                    break
+                case 'c':
+                    if(e.ctrlKey) this.copyToClipboard();
+                    break;
             }
         })
     }
