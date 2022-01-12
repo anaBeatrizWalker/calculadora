@@ -61,6 +61,22 @@ class CalcController {
         let result = eval(this._operation.join(""))
 
         this._operation = [result, last] //espera o próximo elemento da calculadora
+
+        this.setLastNumberToDisplay()
+    }
+
+    //Atualiza o display com o último digitado
+    setLastNumberToDisplay(){
+
+        let lastNumber
+        for(let i = this._operation.length - 1; i >= 0; i--){
+            if(!this.isOperator(this._operation[i])){
+                //is number
+                lastNumber = this._operation[i]
+                break
+            }
+        }
+        this.displayCalc = lastNumber
     }
 
     addOperation(value){
@@ -70,13 +86,15 @@ class CalcController {
             //se é operações e ponto
             if(this.isOperator(value)){ 
                // se for um operador, troca pelo último
-               this.setLasOperation(value)
+               this.setLastOperation(value)
 
             }else if(isNaN(value)){
                 //Outra coisa
                 console.log(value)
             }else{
                 this.pushOperation(value)
+
+                this.setLastNumberToDisplay()
             }
 
         }else{
@@ -89,6 +107,8 @@ class CalcController {
                 let newValue = this.getLastOperation().toString() +  value.toString()
 
                 this.setLastOperation(parseInt(newValue))//troca pelo último
+
+                this.setLastNumberToDisplay()//atualiza display
             }
         }
     }
