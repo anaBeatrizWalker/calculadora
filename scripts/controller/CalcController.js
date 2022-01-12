@@ -67,6 +67,8 @@ class CalcController {
     calc(){
         let last = ''
 
+        this._lastOperator = this.getLastItem()
+
         if(this._operation.length < 3){
             
             let firstItem =  this._operation[0]
@@ -80,16 +82,13 @@ class CalcController {
             //Tira o último
             last = this._operation.pop()
 
-            //Guarda o resultado (numero e operador)
-            this._lastOperator = this.getLastItem()
+            //Guarda o resultado 
             this._lastNumber = this.getResult()
         
         }else if(this._operation.length == 3){
-            this._lastOperator = this.getLastItem()
+            
             this._lastNumber = this.getLastItem(false)
         }
-        console.log('lastOperator: ', this._lastOperator)
-        console.log('lastNumber: ', this._lastNumber)
 
         let result = this.getResult()
 
@@ -145,9 +144,6 @@ class CalcController {
                // se for um operador, troca pelo último
                this.setLastOperation(value)
 
-            }else if(isNaN(value)){
-                //Outra coisa
-                console.log(value)
             }else{
                 this.pushOperation(value)
 
@@ -163,7 +159,7 @@ class CalcController {
                 //Converte para string para concatenar os números
                 let newValue = this.getLastOperation().toString() +  value.toString()
 
-                this.setLastOperation(parseInt(newValue))//troca pelo último
+                this.setLastOperation(parseFloat(newValue))//troca pelo último
 
                 this.setLastNumberToDisplay()//atualiza display
             }
@@ -172,6 +168,20 @@ class CalcController {
 
     setError(){
         this.displayCalc = 'Error'
+    }
+
+    addDot(){
+        let lastOperation = this.getLastOperation()
+
+        //Se é um operador ou não existe
+        if(this.isOperator(lastOperation) || !lastOperation){
+            this.pushOperation('0.')
+        }
+        //Se é um número e existe
+        else{
+            this.setLastOperation(lastOperation.toString() + ".")//troca pelo último número e concatena
+        }
+        this.setLastNumberToDisplay()
     }
 
     //Execução dos botões
@@ -210,7 +220,7 @@ class CalcController {
                 break;
 
             case 'ponto':
-                
+                this.addDot()
                 break;
             
             case '0':
