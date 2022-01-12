@@ -56,12 +56,19 @@ class CalcController {
     calc(){
         //Tira o último
         let last = this._operation.pop()
-
         //Tranforma em string e faz a operação
         let result = eval(this._operation.join(""))
 
-        this._operation = [result, last] //espera o próximo elemento da calculadora
+        if(last == '%'){
 
+            result /= 100
+
+            this._operation = [result]
+
+        }else{
+            //salva e espera o próximo elemento da calculadora
+            this._operation = [result, last] 
+        }
         this.setLastNumberToDisplay()
     }
 
