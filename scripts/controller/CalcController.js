@@ -1,6 +1,9 @@
 //Regras de negócio
 class CalcController {
     constructor(){
+        this._lastOperator = ''
+        this._lastNumber = ''
+
         this._operation = []; //guarda tudo oq foi clicado
         this._locale = 'pt-BR'
         this._displayCalcEl = document.querySelector("#display")
@@ -57,16 +60,38 @@ class CalcController {
         }
     } 
 
+    getResult(){
+        return eval(this._operation.join(""))
+    }
+
     calc(){
         let last = ''
+
+        if(this._operation.length < 3){
+            
+            let firstItem =  this._operation[0]
+
+            //Faz o cálculo normalmente com os 3 itens
+            this._operation = [firstItem, this._lastOperator, this._lastNumber]
+
+        }
 
         if(this._operation.length > 3){
             //Tira o último
             last = this._operation.pop()
-        }
+
+            //Guarda o resultado (numero e operador)
+            this._lastOperator = this.getLastItem()
+            this._lastNumber = this.getResult()
         
-        //Tranforma em string e faz a operação
-        let result = eval(this._operation.join(""))
+        }else if(this._operation.length == 3){
+            this._lastOperator = this.getLastItem()
+            this._lastNumber = this.getLastItem(false)
+        }
+        console.log('lastOperator: ', this._lastOperator)
+        console.log('lastNumber: ', this._lastNumber)
+
+        let result = this.getResult()
 
         if(last == '%'){
 
@@ -83,17 +108,29 @@ class CalcController {
         this.setLastNumberToDisplay()
     }
 
+    getLastItem(isOperator = true){
+        let lastItem
+
+        for(let i = this._operation.length-1; i >= 0; i--){
+
+                if(this.isOperator(this._operation[i]) == isOperator){
+                    lastItem = this._operation[i]
+                    break;
+                }
+        }
+        if(!lastItem){ //se não encontrou o último item
+
+            //se é um operador,pega o último operador, se não, pega o último número
+            lastItem = (isOperator) ? this._lastOperator : this._lastNumber
+        }
+        return lastItem
+    }
+
     //Atualiza o display com o último digitado
     setLastNumberToDisplay(){
 
-        let lastNumber
-        for(let i = this._operation.length - 1; i >= 0; i--){
-            if(!this.isOperator(this._operation[i])){
-                //is number
-                lastNumber = this._operation[i]
-                break
-            }
-        }
+        let lastNumber = this.getLastItem(false)
+
         if(!lastNumber) lastNumber = 0
 
         this.displayCalc = lastNumber
