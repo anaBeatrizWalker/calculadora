@@ -419,6 +419,11 @@ class CalcController {
         return this._displayCalcEl.innerHTML
     }
     set displayCalc(value){
+        //Se tiver mais de 10 valores no display, dispare um erro
+        if(value.toString().length > 10){
+            this.setError()
+            return false
+        }
         //atribui valor
         this._displayCalcEl.innerHTML = value
     }
