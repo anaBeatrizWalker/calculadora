@@ -1,6 +1,8 @@
 //Regras de negócio
 class CalcController {
     constructor(){
+        this._audio = new Audio('click.mp3')
+        this._audioOnOff = false
         this._lastOperator = ''
         this._lastNumber = ''
 
@@ -46,13 +48,47 @@ class CalcController {
         
         this.setLastNumberToDisplay()
         this.pasteFromClipboard()
+
+        //Evento de duplo clique no botão para iniciar som
+        document.querySelectorAll('.btn-ac').forEach(btn => {
+            btn.addEventListener('dblclick', e => {
+                this.toggleAudio()
+            })
+        })
     }
+    
+    //Interruptor
+    toggleAudio(){
+
+        this._audioOnOff = !this._audioOnOff
+
+        /*
+        if(this._audioOnOff){
+            this._audioOnOff = false
+        }else{
+            this._audioOnOff = true
+        }
+         if ternário: mais inteligente 
+        this._audioOnOff = this._audioOnOff ? false : true */
+        
+        /* ou ainda
+        this._audioOnOff = !this._audioOnOff */
+    }
+    
+    //Toca áudio sem deixar terminar
+    playAudio(){
+        if(this._audioOnOff){
+            this._audio.currentTime = 0
+            this._audio.play()
+        }
+    } 
 
     //Usando o teclado 
     initKeyboard(){
 
         document.addEventListener('keyup', e => {
-            
+
+            this.playAudio()            
             switch(e.key){//key propriedade que retorna o texto da tecla
                 case 'Escape':
                     this.clearAll();
@@ -264,7 +300,9 @@ class CalcController {
     }
 
     //Execução dos botões
-    execBtn(value){      
+    execBtn(value){ 
+        
+        this.playAudio()
         switch(value){
             case 'ac':
                 this.clearAll()
